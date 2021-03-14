@@ -25,11 +25,12 @@ jobs:
           SHA_TAG=`echo $GITHUB_SHA | head -c 6`
           echo $SHA_TAG
           IMG_TAGS="$IMG_TAGS,$SHA_TAG"
-          echo ::set-output name=DOCKER_TAGS::${{ IMG_TAGS }}
+          echo $IMG_TAGS
+          echo ::set-output name=DOCKER_TAGS::${IMG_TAGS}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-          push: true
-          tags: fengkx/node_rssbot:${{}}
+          push: false
+          tags: fengkx/node_rssbot:${{steps.docker-tag.outputs.DOCKER_TAGS}}
